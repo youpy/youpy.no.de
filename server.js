@@ -1,6 +1,4 @@
 var express = require('express');
-var http = require('http');
-var URL = require('url');
 var app = express.createServer();
 
 app.get('/', function(req, res){
