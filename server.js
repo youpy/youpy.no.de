@@ -8,7 +8,7 @@ app.get('/', function(req, res){
 app.get('/soundcloud/download.:format', function(req, res){
   var downloadUrl = req.param('download_url');
 
-  if(downloadUrl) {
+  if(downloadUrl && downloadUrl.match(/^http:\/\/api\.soundcloud\.com\//) {
     res.redirect(downloadUrl);
   } else {
     res.send('error', {}, 400);
