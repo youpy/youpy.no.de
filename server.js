@@ -5,7 +5,7 @@ app.get('/', function(req, res){
   res.send('H');
 });
 
-app.get('/soundcloud/download.mp3', function(req, res){
+app.get('/soundcloud/download.wav', function(req, res){
   var downloadUrl = req.param('download_url');
 
   if(downloadUrl) {
