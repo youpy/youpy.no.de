@@ -4,7 +4,7 @@ var URL = require('url');
 var app = express.createServer();
 
 app.get('/', function(req, res){
-  res.send('H');
+  res.send('', {}, 204);
 });
 
 app.get('/soundcloud/download.:format', function(req, res){
