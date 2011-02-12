@@ -33,21 +33,16 @@ module.exports = {
       statusCode: 400,
       body: 'error'
     });
-  },
-  '/': function() {
-    assert.response(app, {
-      url: '/'
-    }, {
-      body: '',
-      statusCode: 204
-    });
-  },
-  '/xxx/yyy': function() {
-    assert.response(app, {
-      url: '/xxx/yyy'
-    }, {
-      body: '',
-      statusCode: 204
-    });
   }
 };
+
+['/', '/xxx', '/foo/bar'].forEach(function(path) {
+  module.exports[path] = function() {
+    assert.response(app, {
+      url: path
+    }, {
+      body: '',
+      statusCode: 204
+    });
+  };
+});
