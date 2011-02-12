@@ -1,10 +1,6 @@
 var express = require('express');
 var app = express.createServer();
 
-app.get('/', function(req, res){
-  res.send('', {}, 204);
-});
-
 app.get('/soundcloud/download.:format', function(req, res){
   var downloadUrl = req.param('download_url');
 
@@ -13,6 +9,10 @@ app.get('/soundcloud/download.:format', function(req, res){
   } else {
     res.send('error', {}, 400);
   }
+});
+
+app.get('*', function(req, res){
+  res.send('', {}, 204);
 });
 
 app.listen(process.env.PORT || 8001);
