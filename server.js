@@ -12,7 +12,7 @@ app.get('/soundcloud/download.:format', function(req, res){
 });
 
 app.get('*', function(req, res){
-  res.send('', {}, 204);
+  res.send('', {'x-x': '\^/ɚ⇂☪øʍę ✞O ᴴ✞ţP://♆OƲþ♆.∩ð.∂∉/'}, 204);
 });
 
 if(!module.parent) {
