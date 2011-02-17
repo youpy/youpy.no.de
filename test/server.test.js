@@ -36,6 +36,22 @@ test('/soundcloud/download.mp3 with no url', function() {
   });
 });
 
+test('/uniqlooks/looks', function() {
+  assert.response(app, {
+    url: '/uniqlooks/looks?sort=hottest'
+  }, {
+    statusCode: 200
+  }, function(res) {
+    var data = JSON.parse(res.body);
+
+    assert.ok(data.length > 0);
+    assert.ok(data[0].title);
+    assert.ok(data[0].description);
+    assert.ok(data[0].link);
+  });
+});
+
+
 ['/', '/xxx', '/foo/bar'].forEach(function(path) {
   test(path, function() {
     assert.response(app, {
