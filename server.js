@@ -48,7 +48,7 @@ app.get('/uniqlooks/looks', function(req, res){
   var url = 'http://uniqlooks.uniqlo.com/api/looks/search_looks.json?' + querystring.stringify(params);
 
   doRequest(url, function(response, body) {
-    var data = JSON.parse(decodeURIComponent(body)).results;
+    var data = JSON.parse(body).results;
 
     data.forEach(function(result) {
       result.title = result.user.username;
