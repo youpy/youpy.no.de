@@ -6,26 +6,8 @@ var querystring = require('querystring');
 var util = require('util');
 var zombie = require('zombie');
 var browser = new zombie.Browser({ debug: true });
+var request = require('request');
 browser.runScripts = false;
-
-function doRequest(url, callback) {
-  url = URL.parse(url);
-  var client = http.createClient(url.port || 80, url.hostname);
-  var request = client.request(url.pathname + (url.search ? url.search : ''), {'host': url.hostname});
-
-  request.end();
-  request.on('response', function(response) {
-    var body = '';
-
-    response.on('data', function(chunk) {
-      body += chunk;
-    });
-
-    response.on('end', function() {
-      callback(response, body);
-    });
-  });
-}
 
 app.get('/soundcloud/download.:format', function(req, res){
   var downloadUrl = req.param('download_url');
@@ -51,7 +33,7 @@ app.get('/uniqlooks/looks', function(req, res){
 
   var url = 'http://uniqlooks.uniqlo.com/api/looks/search_looks.json?' + querystring.stringify(params);
 
-  doRequest(url, function(response, body) {
+  request({ uri: url }, function(error, response, body) {
     var data = JSON.parse(body).results;
 
     data.forEach(function(result) {
@@ -75,7 +57,7 @@ app.get('/tcs/:name', function(req, res) {
   var servicesURL = 'http://wedata.net/databases/Text%20Conversion%20Services/items.json',
       text = req.param('text') || '';
 
-  doRequest(servicesURL, function(response, body) {
+  request({ uri: servicesURL }, function(error, response, body) {
     var data = JSON.parse(body),
         entry = data.filter(function(e) { return e.name == req.param('name'); })[0],
         responseData = { result: null },
@@ -92,7 +74,7 @@ app.get('/tcs/:name', function(req, res) {
           res.send(responseData);
         });
       } else {
-        doRequest(url, function(response, body) {
+        request({ uri: url }, function(error, response, body) {
           responseData.result = body;
           res.send(responseData);
         });
