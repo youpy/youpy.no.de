@@ -3,6 +3,10 @@ var http = require('http');
 var URL = require('url');
 var app = module.exports = express.createServer();
 var querystring = require('querystring');
+var util = require('util');
+var zombie = require('zombie');
+var browser = new zombie.Browser({ debug: true });
+browser.runScripts = false;
 
 function doRequest(url, callback) {
   url = URL.parse(url);
@@ -64,6 +68,36 @@ app.get('/uniqlooks/looks', function(req, res){
     });
 
     res.send(data);
+  });
+});
+
+app.get('/tcs/:name', function(req, res) {
+  var servicesURL = 'http://wedata.net/databases/Text%20Conversion%20Services/items.json',
+      text = req.param('text') || '';
+
+  doRequest(servicesURL, function(response, body) {
+    var data = JSON.parse(body),
+        entry = data.filter(function(e) { return e.name == req.param('name'); })[0],
+        responseData = { result: null },
+        url,
+        doc,
+        window;
+
+    if(entry) {
+      url = entry.data.url.replace('%s', encodeURIComponent(text));
+      if(entry.data.xpath) {
+        browser.visit(url, function (err, browser, status) {
+          var e = browser.xpath(entry.data.xpath);
+          responseData.result = e.stringValue();
+          res.send(responseData);
+        });
+      } else {
+        doRequest(url, function(response, body) {
+          responseData.result = body;
+          res.send(responseData);
+        });
+      };
+    }
   });
 });
 

@@ -1,5 +1,6 @@
 var assert = require('assert');
 var app = require('../server');
+var util = require('util');
 
 test('/soundcloud/download.mp3 with valid url', function() {
   var url = 'http://api.soundcloud.com/tracks/8622419/download?consumer_key=xxxx';
@@ -51,6 +52,34 @@ test('/uniqlooks/looks', function() {
   });
 });
 
+test('tcs(tiisai)', function() {
+  var text = encodeURIComponent('テスト');
+
+  assert.response(app, {
+    url: '/tcs/%E3%81%A1%E3%81%84%E3%81%95%E3%81%84?text=' + text
+  }, {
+    statusCode: 200
+  }, function(res) {
+    var data = JSON.parse(res.body);
+
+    assert.equal(' ͭ ͤす ͭ ͦ', data.result);
+  });
+});
+
+test('tcs(アングラサイト)', function() {
+  var text = encodeURIComponent('テスト');
+  var path = encodeURIComponent('アングラサイト');
+
+  assert.response(app, {
+    url: '/tcs/' + path + '?text=' + text
+  }, {
+    statusCode: 200
+  }, function(res) {
+    var data = JSON.parse(res.body);
+
+    assert.equal('テス㌧', data.result);
+  });
+});
 
 ['/', '/xxx', '/foo/bar'].forEach(function(path) {
   test(path, function() {
