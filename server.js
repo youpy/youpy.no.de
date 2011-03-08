@@ -53,6 +53,16 @@ app.get('/uniqlooks/looks', function(req, res){
   });
 });
 
+function appendResult(action, result, text) {
+  if(action === 'prepend') {
+    return result + ' ' + text;
+  } else if(action === 'append') {
+    return text + ' ' + result;
+  } else {
+    return result;
+  }
+}
+
 app.get('/tcs/:name', function(req, res) {
   var servicesURL = 'http://wedata.net/databases/Text%20Conversion%20Services/items.json',
       text = req.param('text') || '';
@@ -70,12 +80,12 @@ app.get('/tcs/:name', function(req, res) {
       if(entry.data.xpath) {
         browser.visit(url, function (err, browser, status) {
           var e = browser.xpath(entry.data.xpath);
-          responseData.result = e.stringValue();
+          responseData.result = appendResult(entry.data.action, e.stringValue(), text);
           res.send(responseData);
         });
       } else {
         request({ uri: url }, function(error, response, body) {
-          responseData.result = body;
+          responseData.result = appendResult(entry.data.action, body, text);
           res.send(responseData);
         });
       };

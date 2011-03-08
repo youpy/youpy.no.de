@@ -54,9 +54,10 @@ test('/uniqlooks/looks', function() {
 
 test('tcs(tiisai)', function() {
   var text = encodeURIComponent('テスト');
+  var path = encodeURIComponent('ちいさい');
 
   assert.response(app, {
-    url: '/tcs/%E3%81%A1%E3%81%84%E3%81%95%E3%81%84?text=' + text
+    url: '/tcs/' + path + '?text=' + text
   }, {
     statusCode: 200
   }, function(res) {
@@ -78,6 +79,54 @@ test('tcs(アングラサイト)', function() {
     var data = JSON.parse(res.body);
 
     assert.equal('テス㌧', data.result);
+  });
+});
+
+test('tcs(gobi)', function() {
+  var text = encodeURIComponent('test');
+  var path = encodeURIComponent('append-gobi');
+
+  assert.response(app, {
+    url: '/tcs/' + path + '?text=' + text
+  }, {
+    statusCode: 200
+  }, function(res) {
+    var data = JSON.parse(res.body);
+    var result = data.result;
+
+    assert.match(result, /^test.+/);
+  });
+});
+
+test('tcs(prefix)', function() {
+  var text = encodeURIComponent('test');
+  var path = encodeURIComponent('prepend prefix');
+
+  assert.response(app, {
+    url: '/tcs/' + path + '?text=' + text
+  }, {
+    statusCode: 200
+  }, function(res) {
+    var data = JSON.parse(res.body);
+    var result = data.result;
+
+    assert.match(result, /.+test$/);
+  });
+});
+
+test('tcs(笑い顔顔文字)', function() {
+  var text = encodeURIComponent('test');
+  var path = encodeURIComponent('笑い顔顔文字');
+
+  assert.response(app, {
+    url: '/tcs/' + path + '?text=' + text
+  }, {
+    statusCode: 200
+  }, function(res) {
+    var data = JSON.parse(res.body);
+    var result = data.result;
+
+    assert.match(result, /^test.+/);
   });
 });
 
