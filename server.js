@@ -7,6 +7,7 @@ var util = require('util');
 var zombie = require('zombie');
 var browser = new zombie.Browser({ debug: true });
 var request = require('request');
+
 browser.runScripts = false;
 
 app.get('/soundcloud/download.:format', function(req, res){
@@ -17,40 +18,6 @@ app.get('/soundcloud/download.:format', function(req, res){
   } else {
     res.send('error', {}, 400);
   }
-});
-
-app.get('/uniqlooks/looks', function(req, res){
-  var params = {
-    sort: null,
-    gender: null
-  };
-
-  for(var i in params) {
-    if(params.hasOwnProperty(i)) {
-      params[i] = req.params[i];
-    }
-  }
-
-  var url = 'http://uniqlooks.uniqlo.com/api/looks/search_looks.json?' + querystring.stringify(params);
-
-  request({ uri: url }, function(error, response, body) {
-    var data = JSON.parse(body).results;
-
-    data.forEach(function(result) {
-      result.title = result.user.username;
-      if(result.user.occupation !== '')  {
-        result.title += '(' + result.user.occupation + ')';
-      }
-      result.title += ' - ' + result.location;
-      result.description = '';
-      result.img.forEach(function(imageUrls) {
-        result.description += '<p><img src="' + imageUrls.big + '"></p>';
-      });
-      result.link = 'http://uniqlooks.uniqlo.com/#!/look/' + result.id;
-    });
-
-    res.send(data);
-  });
 });
 
 function appendResult(action, result, text) {
