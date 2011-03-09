@@ -130,6 +130,14 @@ test('tcs(笑い顔顔文字)', function() {
   });
 });
 
+test('ja-tweet', function() {
+  assert.response(app, {
+    url: '/ja-tweet/'
+  }, {
+    statusCode: 200
+  });
+});
+
 ['/', '/xxx', '/foo/bar'].forEach(function(path) {
   test(path, function() {
     assert.response(app, {

@@ -93,6 +93,16 @@ app.get('/tcs/:name', function(req, res) {
   });
 });
 
+app.get('/ja-tweet/', function(req, res) {
+  var url = 'http://ja.favstar.fm/';
+  var xpath = '//div[@class="theTweet"]/text()';
+  
+  browser.visit(url, function (err, browser, status) {
+    var e = browser.querySelectorAll('div.theTweet');
+    res.send(e[Math.floor(Math.random() * e.length)].textContent);
+  });
+});
+
 app.get('*', function(req, res){
   res.send('', {'x-x': '\^/ɚ⇂☪øʍę ✞O ᴴ✞ţP://♆OƲþ♆.∩ð.∂∉/'}, 204);
 });
