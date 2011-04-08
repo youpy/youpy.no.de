@@ -1,0 +1,31 @@
+!!! 5
+html(lang="en")
+  head
+    title flash switch
+    script(src='/socket.io/socket.io.js')
+    script(type='text/javascript')
+      onload = function() {
+        var socket = new io.Socket();
+        var checkbox = document.getElementById('switch');
+
+        socket.connect();
+        socket.on('message', function(message) {
+          if(message === 'on') {
+            checkbox.checked = true;
+            if(roid) roid.on();
+          }
+
+          if(message === 'off') {
+            checkbox.checked = false;
+            if(roid) roid.off();
+          }
+        });
+
+        checkbox.onclick = function() {
+          socket.send(checkbox.checked ? 'on' : 'off');
+        };
+      };
+  body
+    h1 flash switch
+    p
+      input(type='checkbox',id='switch')

@@ -7,9 +7,12 @@ var util = require('util');
 var zombie = require('zombie');
 var browser = new zombie.Browser({ debug: true });
 var request = require('request');
+var io = require('socket.io');
 
 browser.runScripts = false;
 
+app.set('view engine', 'jade');
+app.set('view options', { layout: false });
 app.get('/soundcloud/download.:format', function(req, res){
   var downloadUrl = req.param('download_url');
 
@@ -60,6 +63,10 @@ app.get('/tcs/:name', function(req, res) {
   });
 });
 
+app.get('/flash/', function(req, res) {
+  res.render('flash.jade');
+});
+
 app.get('/ja-tweet/', function(req, res) {
   var url = 'http://ja.favstar.fm/';
   var xpath = '//div[@class="theTweet"]/text()';
@@ -77,3 +84,17 @@ app.get('*', function(req, res){
 if(!module.parent) {
   app.listen(process.env.PORT || 8001);
 }
+
+var socket = io.listen(app);
+var flash = 'off';
+
+socket.on('connection', function(client){
+  client.send(flash);
+
+  client.on('message', function(message){
+    if(message === 'on' || message === 'off') {
+      flash = message;
+      client.broadcast(message);
+    }
+  });
+});
