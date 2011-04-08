@@ -63,8 +63,8 @@ app.get('/tcs/:name', function(req, res) {
   });
 });
 
-app.get('/flash/', function(req, res) {
-  res.render('flash.jade');
+app.get('/light/', function(req, res) {
+  res.render('light.jade');
 });
 
 app.get('/ja-tweet/', function(req, res) {
@@ -86,14 +86,14 @@ if(!module.parent) {
 }
 
 var socket = io.listen(app);
-var flash = 'off';
+var light = 'off';
 
 socket.on('connection', function(client){
-  client.send(flash);
+  client.send(light);
 
   client.on('message', function(message){
     if(message === 'on' || message === 'off') {
-      flash = message;
+      light = message;
       client.broadcast(message);
     }
   });
